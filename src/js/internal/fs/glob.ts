@@ -45,7 +45,7 @@ function validatePattern(pattern: string | string[]): string {
     throw new TypeError("fs.glob does not support arrays of patterns yet. Please open an issue on GitHub.");
   }
   validateString(pattern, "pattern");
-  return isWindows ? pattern.replaceAll("/", "\\") : pattern;
+  return pattern.replaceAll("/", "\\");
 }
 
 function mapOptions(options: GlobOptions): ExtendedGlobOptions {

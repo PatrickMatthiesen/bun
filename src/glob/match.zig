@@ -289,18 +289,19 @@ inline fn globMatchImpl(state: *State, glob: []const u8, glob_start: u32, path: 
                 }
                 const cc_len = bun.strings.wtf8ByteSequenceLength(cc);
 
-                const is_match = if (cc == '/')
-                    isSeparator(path[state.path_index])
-                else if (cc_len > 1)
-                    state.path_index + cc_len <= path.len and std.mem.eql(u8, path[state.path_index..][0..cc_len], glob[state.glob_index..][0..cc_len])
-                else
-                    path[state.path_index] == cc;
+                const is_match = 
+                    if (isSeparator(cc))
+                        isSeparator(path[state.path_index])
+                    else if (cc_len > 1)
+                        state.path_index + cc_len <= path.len and std.mem.eql(u8, path[state.path_index..][0..cc_len], glob[state.glob_index..][0..cc_len])
+                    else
+                        path[state.path_index] == cc; // exact char match
 
                 if (is_match) {
                     state.glob_index += cc_len;
                     state.path_index += cc_len;
 
-                    if (cc == '/') {
+                    if (isSeparator(cc)) {
                         state.wildcard = state.globstar;
                     }
 

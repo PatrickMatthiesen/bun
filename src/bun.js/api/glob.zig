@@ -279,8 +279,7 @@ fn makeGlobWalker(
 pub fn constructor(globalThis: *JSC.JSGlobalObject, callframe: *JSC.CallFrame) bun.JSError!*Glob {
     const alloc = bun.default_allocator;
 
-    const arguments_ = callframe.arguments_old(1);
-    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), arguments_.slice());
+    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), &callframe.argumentsAsArray(1));
     defer arguments.deinit();
     const pat_arg: JSValue = arguments.nextEat() orelse {
         return globalThis.throw("Glob.constructor: expected 1 arguments, got 0", .{});
@@ -324,8 +323,7 @@ fn decrPendingActivityFlag(has_pending_activity: *std.atomic.Value(usize)) void 
 pub fn __scan(this: *Glob, globalThis: *JSGlobalObject, callframe: *JSC.CallFrame) bun.JSError!JSC.JSValue {
     const alloc = bun.default_allocator;
 
-    const arguments_ = callframe.arguments_old(1);
-    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), arguments_.slice());
+    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), &callframe.argumentsAsArray(1));
     defer arguments.deinit();
 
     var arena = std.heap.ArenaAllocator.init(alloc);
@@ -347,8 +345,7 @@ pub fn __scan(this: *Glob, globalThis: *JSGlobalObject, callframe: *JSC.CallFram
 pub fn __scanSync(this: *Glob, globalThis: *JSGlobalObject, callframe: *JSC.CallFrame) bun.JSError!JSC.JSValue {
     const alloc = bun.default_allocator;
 
-    const arguments_ = callframe.arguments_old(1);
-    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), arguments_.slice());
+    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), &callframe.argumentsAsArray(1));
     defer arguments.deinit();
 
     var arena = std.heap.ArenaAllocator.init(alloc);
@@ -375,9 +372,9 @@ pub fn match(this: *Glob, globalThis: *JSGlobalObject, callframe: *JSC.CallFrame
     var arena = Arena.init(alloc);
     defer arena.deinit();
 
-    const arguments_ = callframe.arguments_old(1);
-    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), arguments_.slice());
+    var arguments = JSC.CallFrame.ArgumentsSlice.init(globalThis.bunVM(), &callframe.argumentsAsArray(1));
     defer arguments.deinit();
+
     const str_arg = arguments.nextEat() orelse {
         return globalThis.throw("Glob.matchString: expected 1 arguments, got 0", .{});
     };
