@@ -12,9 +12,16 @@ export function createTempDirectoryWithBrokenSymlinks() {
   // Create broken symlinks in the temporary directory
   for (const target of brokenTargets) {
     const symlinkPath = path.join(tempDir, `broken_link_to_${target}`);
-    symlinkSync(target, symlinkPath);
-  }
 
+    if (process.platform === "win32") {
+      // windows needs admin rights to create symlinks
+      // so we pretend, and use junctions instead
+      symlinkSync(target, symlinkPath, "junction");
+    } else {
+      // Unix: use regular symlinks
+      symlinkSync(target, symlinkPath);
+    }
+  }
   console.log(`Temporary directory with broken symlinks created at: ${tempDir}`);
   return tempDir;
 }

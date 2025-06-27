@@ -60,12 +60,15 @@ describe("path.win32.matchesGlob(path, glob)", () => {
     ["foo.js", "*.[tj]s"],
     ["foo.ts", "*.[tj]s"],
     ["foo.js", "**\\*.js"],
+    [".\\file.txt", ".\\*.txt"],
     ["src\\bar\\foo.js", "**\\*.js"],
     ["src\\bar\\foo.js", "**/*.js"],
     ["foo\\bar\\baz", "foo\\[bcr]ar\\baz"],
     ["foo\\bar\\baz", "foo/[bcr]ar/baz"],
   ])("path '%s' matches gattern '%s'", (pathname, glob) => {
+    expect(path.matchesGlob(pathname, glob)).toBeTrue();
     expect(path.win32.matchesGlob(pathname, glob)).toBeTrue();
+    expect(path.posix.matchesGlob(pathname, glob)).toBeTrue();
   });
   it.each([
     // line break

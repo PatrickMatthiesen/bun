@@ -483,7 +483,7 @@ test("broken symlinks", async () => {
 });
 
 // This is consistent with fast-glob's behavior
-test.skipIf(process.platform == "win32")("error broken symlinks", async () => {
+test("error broken symlinks", async () => {
   const glob = new Glob("**/*");
   let err: Error | undefined = undefined;
   try {
@@ -650,7 +650,8 @@ describe("absolute path pattern", async () => {
     expect(entries.sort()).toEqual(files.slice(0, files.length - 1).sort());
   });
 
-  test("non-special path as first component", async () => {
+  // requires admin on windows
+  test.skipIf(process.platform === "win32")("non-special path as first component", async () => {
     const glob = new Glob("/**lol");
     const entries = await Array.fromAsync(glob.scan({ onlyFiles: false }));
     expect(entries).toEqual([]);

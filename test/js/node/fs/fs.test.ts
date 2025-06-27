@@ -1514,7 +1514,8 @@ describe("lstat", () => {
     triggerDOMJIT(fileStats, fileStats.isSymbolicLink, false);
   });
 
-  it("symlink metadata is correct", () => {
+  // requires admin rights
+  it.skipIf(process.platform == "win32")("symlink metadata is correct", () => {
     const link = join(tmpdirSync(), `fs-stream.link.js`);
     symlinkSync(join(import.meta.dir, "fs-stream.js"), link);
     const linkStats = lstatSync(link);

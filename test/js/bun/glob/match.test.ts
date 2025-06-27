@@ -33,6 +33,7 @@ describe("Glob.match", () => {
     // expect(glob.match("C:\\Users\\window\\AppData\\Local\\Temp\\testworkspace_V7osKW\\packages\\malfored1")).toBeTrue();
   });
 
+  test("basic relative backslash pattern", async () => {
   test("single wildcard", () => {
     let glob: Glob;
 
