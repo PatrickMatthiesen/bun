@@ -34,6 +34,31 @@ describe("Glob.match", () => {
   });
 
   test("basic relative backslash pattern", async () => {
+    const pattern = ".\\*.txt";
+    const testPath = ".\\file.txt";
+
+    console.log(`\nTesting: ${pattern} should match ${testPath}`);
+
+    const glob = new Glob(pattern);
+    const result = glob.match(testPath);
+
+    console.log(`Result: ${result} (should be true)`);
+
+    // Verify file exists
+    const files = new Glob("*/*").scanSync({ cwd: __dirname });
+    console.log("files at", __dirname);
+    for (const file in files) {
+      console.log(file);
+    }
+
+    // This should pass but currently fails on Windows
+    if (process.platform === "win32") {
+      expect(result).toBe(true); // This will fail, exposing the bug
+    } else {
+      console.log("⚠️  On non-Windows: backslash patterns may not work as expected");
+    }
+  });
+
   test("single wildcard", () => {
     let glob: Glob;
 
