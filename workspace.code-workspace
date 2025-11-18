@@ -11,6 +11,7 @@
     "search.smartCase": true,
     "search.followSymlinks": false,
     "zig.buildOnSave": false,
+    "zig.zls.path": "${workspaceFolder}/vendor/zig/zls.exe",
     "files.associations": {
       "*.idl": "cpp",
       "memory": "cpp",

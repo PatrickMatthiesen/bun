@@ -291,6 +291,12 @@ pub fn constructor(globalThis: *JSC.JSGlobalObject, callframe: *JSC.CallFrame) b
 
     const pat_str: []u8 = @constCast((pat_arg.toSliceClone(globalThis) orelse return error.JSError).slice());
 
+    // Normalize backslashes to forward slashes for consistent cross-platform matching
+    // This ensures Windows-style patterns work on all platforms
+    for (pat_str) |*c| {
+        if (c.* == '\\') c.* = '/';
+    }
+
     const glob = alloc.create(Glob) catch bun.outOfMemory();
     glob.* = .{ .pattern = pat_str };
 

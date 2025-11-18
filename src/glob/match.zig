@@ -144,7 +144,7 @@ pub fn match(_: Allocator, glob: []const u8, path: []const u8) MatchResult {
 }
 
 // `glob_start` is the index where the glob pattern starts
-inline fn globMatchImpl(state: *State, glob: []const u8, glob_start: u32, path: []const u8, brace_stack: *BraceStack) bool {
+fn globMatchImpl(state: *State, glob: []const u8, glob_start: u32, path: []const u8, brace_stack: *BraceStack) bool {
     main_loop: while (state.glob_index < glob.len or state.path_index < path.len) {
         if (state.glob_index < glob.len) fallthrough: {
             const char = glob[state.glob_index];
@@ -407,12 +407,12 @@ fn skipBranch(state: *State, glob: []const u8) void {
     }
 }
 
-inline fn isSeparator(c: u8) bool {
+fn isSeparator(c: u8) bool {
     if (comptime @import("builtin").os.tag == .windows) return c == '/' or c == '\\';
     return c == '/';
 }
 
-inline fn unescape(c: *u8, glob: []const u8, glob_index: *u32) bool {
+fn unescape(c: *u8, glob: []const u8, glob_index: *u32) bool {
     if (c.* == '\\') {
         glob_index.* += 1;
         if (glob_index.* >= glob.len)

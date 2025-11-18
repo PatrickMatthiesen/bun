@@ -29,11 +29,15 @@ import { join } from "path";
 
 describe("Glob.match", () => {
   test("WTF", () => {
-    // let glob = new Glob("C:\\Users\\window\\AppData\\Local\\Temp\\testworkspace_V7osKW\\**");
-    // expect(glob.match("C:\\Users\\window\\AppData\\Local\\Temp\\testworkspace_V7osKW\\packages\\malfored1")).toBeTrue();
+    let glob = new Glob("C:\\Users\\window\\AppData\\Local\\Temp\\testworkspace_V7osKW\\**");
+    expect(glob.match("C:\\Users\\window\\AppData\\Local\\Temp\\testworkspace_V7osKW\\packages\\malfored1")).toBeTrue();
+
+    glob = new Glob(".\\*.txt");
+    expect(glob.match(".\\file.txt")).toBeTrue();
   });
 
   test("basic relative backslash pattern", async () => {
+    // Pattern: .\\*.txt should match .\\file.txt but fails
     const pattern = ".\\*.txt";
     const testPath = ".\\file.txt";
 
@@ -50,6 +54,9 @@ describe("Glob.match", () => {
     for (const file in files) {
       console.log(file);
     }
+
+    // let file = Bun.file(import.meta.file);
+    // expect(await file.exists()).toBe(true);
 
     // This should pass but currently fails on Windows
     if (process.platform === "win32") {

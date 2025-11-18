@@ -134,6 +134,24 @@ describe("fs.globSync", () => {
     const paths = fs.globSync("*.test", { cwd: tmp });
     expect(paths).toContain("folder.test");
   });
+
+  it.if(isWindows)("works with Windows backslash paths from path.join", () => {
+    // Test the fix for Windows path.join() + glob patterns
+    // Previously, fs.globSync would incorrectly convert / to \ instead of \ to /
+    const path = require("node:path");
+
+    // This is the common pattern that was broken: path.join(basePath, globPattern)
+    const pattern = path.join(tmp, "*.txt");
+
+    // The pattern should now work correctly with backslashes
+    expect(pattern).toContain("\\"); // Verify we're testing a backslash path
+
+    const results = fs.globSync(pattern);
+
+    // Should find foo.txt in the temp directory
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.some(result => result.endsWith("foo.txt"))).toBe(true);
+  });
 }); // </fs.globSync>
 
 describe("fs.promises.glob", () => {
